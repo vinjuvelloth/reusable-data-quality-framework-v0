@@ -1,4 +1,9 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
+# Databricks notebook source
 """
 ==================================================
 Reusable Data Quality Framework
@@ -8,6 +13,22 @@ Author      : Vinju Velloth
 Version     : v0
 ==================================================
 """
+
+import os
+import sys
+
+# --------------------------------------------------
+# Add project src folder to Python path
+# --------------------------------------------------
+
+repo_root = os.path.abspath(os.path.join(os.getcwd(), "..", ".."))
+src_path = os.path.join(repo_root, "src")
+
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+print(f"Repository : {repo_root}")
+print(f"Source Path: {src_path}")
 
 from dqframework.framework_config import FrameworkConfig
 from dqframework.framework_logger import FrameworkLogger
@@ -23,7 +44,7 @@ spark.sql(f"USE CATALOG {catalog}")
 spark.sql(f"USE SCHEMA {schema}")
 
 print("=" * 60)
-print("Reusable Data Quality Framework")
+print(config["framework"]["name"])
 print("=" * 60)
 print(f"Catalog : {catalog}")
 print(f"Schema  : {schema}")
@@ -37,10 +58,7 @@ required_tables = [
     config["metadata"]["quarantine"]
 ]
 
-tables = [
-    row.tableName
-    for row in spark.sql("SHOW TABLES").collect()
-]
+tables = [row.tableName for row in spark.sql("SHOW TABLES").collect()]
 
 print("\nFramework Tables")
 print("-" * 60)
@@ -49,17 +67,13 @@ for table in required_tables:
     status = "FOUND" if table in tables else "MISSING"
     print(f"{table:<35} {status}")
 
+volumes = [row.volume_name for row in spark.sql("SHOW VOLUMES").collect()]
+
 print("\nVolumes")
 print("-" * 60)
-
-volumes = [
-    row.volume_name
-    for row in spark.sql("SHOW VOLUMES").collect()
-]
 
 status = "FOUND" if volume in volumes else "MISSING"
 print(f"{volume:<35} {status}")
 
-print("\nEnvironment verification completed.")
-
 logger.info("Framework environment verified successfully.")
+print("\nEnvironment verification completed.")

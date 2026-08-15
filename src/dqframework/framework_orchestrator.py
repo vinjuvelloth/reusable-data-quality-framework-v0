@@ -99,9 +99,9 @@ class FrameworkOrchestrator:
                     .saveAsTable(target_table)
                 )
 
-                self.quarantine_repository.save_failed_records(
-                    result.failed_df
-                )
+                self.quarantine_repository.save_failed_records(run_id=run_id,source_table=source_table,
+                    failed_df=result.failed_df
+                ) 
 
             except Exception as ex:
 

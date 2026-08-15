@@ -11,16 +11,13 @@ Version     : v0
 from __future__ import annotations
 
 from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import col, current_timestamp, lit, struct, to_json
 
 from dqframework.framework_config import FrameworkConfig
 from dqframework.framework_logger import FrameworkLogger
 
 
 class QuarantineRepository:
-    """
-    Repository responsible for writing failed records
-    to the quarantine table.
-    """
 
     def __init__(self, spark: SparkSession) -> None:
 
@@ -38,16 +35,10 @@ class QuarantineRepository:
 
     def save_failed_records(
         self,
+        run_id: str,
+        source_table: str,
         failed_df: DataFrame | None
     ) -> None:
-        """
-        Saves failed records into the quarantine table.
-
-        Parameters
-        ----------
-        failed_df : DataFrame | None
-            DataFrame containing failed records.
-        """
 
         if failed_df is None:
             self.logger.info("No failed records found.")
@@ -65,8 +56,32 @@ class QuarantineRepository:
             self.quarantine_table
         )
 
+        metadata_columns = {
+            "failed_rule",
+            "failed_column",
+            "failed_reason"
+        }
+
+        source_columns = [
+            c for c in failed_df.columns
+            if c not in metadata_columns
+        ]
+
+        quarantine_df = (
+            failed_df
+            .select(
+                lit(run_id).alias("run_id"),
+                lit(source_table).alias("source_table"),
+                col("failed_rule"),
+                col("failed_column"),
+                col("failed_reason"),
+                to_json(struct(*[col(c) for c in source_columns])).alias("record_data_json"),
+                current_timestamp().alias("created_timestamp")
+            )
+        )
+
         (
-            failed_df.write
+            quarantine_df.write
             .mode("append")
             .saveAsTable(self.quarantine_table)
         )

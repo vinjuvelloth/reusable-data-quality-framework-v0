@@ -1,4 +1,9 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
+# Databricks notebook source
 """
 ==================================================
 Reusable Data Quality Framework
@@ -8,6 +13,22 @@ Author      : Vinju Velloth
 Version     : v0
 ==================================================
 """
+
+import os
+import sys
+
+# --------------------------------------------------
+# Add project src folder to Python path
+# --------------------------------------------------
+
+repo_root = os.path.abspath(os.path.join(os.getcwd(), "..", ".."))
+src_path = os.path.join(repo_root, "src")
+
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+print(f"Repository : {repo_root}")
+print(f"Source Path: {src_path}")
 
 from dqframework.framework_config import FrameworkConfig
 from dqframework.framework_logger import FrameworkLogger
@@ -79,4 +100,5 @@ else:
 
 print("=" * 70)
 print("Bronze ingestion completed.")
+
 logger.info("Bronze ingestion completed.")

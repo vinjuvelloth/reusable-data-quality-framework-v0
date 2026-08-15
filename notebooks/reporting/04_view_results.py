@@ -1,4 +1,9 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
+# Databricks notebook source
 """
 ==================================================
 Reusable Data Quality Framework
@@ -8,6 +13,22 @@ Author      : Vinju Velloth
 Version     : v0
 ==================================================
 """
+
+import os
+import sys
+
+# --------------------------------------------------
+# Add project src folder to Python path
+# --------------------------------------------------
+
+repo_root = os.path.abspath(os.path.join(os.getcwd(), "..", ".."))
+src_path = os.path.join(repo_root, "src")
+
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+print(f"Repository : {repo_root}")
+print(f"Source Path: {src_path}")
 
 from dqframework.framework_config import FrameworkConfig
 from dqframework.framework_logger import FrameworkLogger
@@ -23,13 +44,7 @@ print(config["framework"]["name"])
 print("Execution Results")
 print("=" * 70)
 
-# --------------------------------------------------
-# Execution Audit
-# --------------------------------------------------
-
 print("\nExecution Audit")
-print("-" * 70)
-
 display(
     spark.sql(f"""
         SELECT *
@@ -38,13 +53,7 @@ display(
     """)
 )
 
-# --------------------------------------------------
-# Execution Summary
-# --------------------------------------------------
-
 print("\nExecution Summary")
-print("-" * 70)
-
 display(
     spark.sql(f"""
         SELECT
@@ -58,13 +67,7 @@ display(
     """)
 )
 
-# --------------------------------------------------
-# Rule Summary
-# --------------------------------------------------
-
 print("\nValidation Rule Summary")
-print("-" * 70)
-
 display(
     spark.sql(f"""
         SELECT
@@ -76,13 +79,7 @@ display(
     """)
 )
 
-# --------------------------------------------------
-# Quarantine Records
-# --------------------------------------------------
-
 print("\nQuarantine Records")
-print("-" * 70)
-
 display(
     spark.sql(f"""
         SELECT *
@@ -91,13 +88,7 @@ display(
     """)
 )
 
-# --------------------------------------------------
-# Quarantine Summary
-# --------------------------------------------------
-
 print("\nQuarantine Summary")
-print("-" * 70)
-
 display(
     spark.sql(f"""
         SELECT
@@ -110,24 +101,12 @@ display(
     """)
 )
 
-# --------------------------------------------------
-# Bronze Tables
-# --------------------------------------------------
-
 print("\nBronze Tables")
-print("-" * 70)
-
 display(
     spark.sql(f"SHOW TABLES IN {catalog}.bronze")
 )
 
-# --------------------------------------------------
-# Silver Tables
-# --------------------------------------------------
-
 print("\nSilver Tables")
-print("-" * 70)
-
 display(
     spark.sql(f"SHOW TABLES IN {catalog}.silver")
 )
