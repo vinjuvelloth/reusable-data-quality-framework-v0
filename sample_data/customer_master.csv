@@ -1,0 +1,11 @@
+customer_id,customer_name,age,email,gender
+101,John,35,john@gmail.com,M
+102,,40,mary@gmail.com,F
+103,Alice,-5,alice@gmail.com,F
+101,David,45,david@gmail.com,M
+105,Tom,25,tomgmail.com,M
+106,Sarah,150,sarah@gmail.com,F
+107,Bob,32,bob@gmail.com,X
+108,Emma,28,emma@gmail.com,F
+109,James,55,james@gmail.com,M
+110,Olivia,41,olivia@gmail.com,F

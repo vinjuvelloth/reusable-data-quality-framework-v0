@@ -1,0 +1,39 @@
+#==================================================
+# Reusable Data Quality Framework
+# Version : v0
+#==================================================
+
+framework:
+  name: Reusable Data Quality Framework
+  version: v0
+
+environment:
+  catalog: dq_framework
+  schema: framework
+  volume: demo_files
+
+metadata:
+  rule_master: dq_rule_master
+  execution_master: dq_execution_master
+  execution_audit: dq_execution_audit
+  quarantine: dq_quarantine_data
+
+storage:
+  source_layer: bronze
+  target_layer: silver
+
+logging:
+  level: INFO
+  log_directory: logs
+
+execution:
+  stop_on_error: false
+  save_quarantine: true
+  save_audit: true
+
+supported_rule_types:
+  - NOT_NULL
+  - UNIQUE
+  - RANGE
+  - SET
+  - EMAIL

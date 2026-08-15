@@ -1,0 +1,6 @@
+employee_id,employee_name,age,email,department
+1,John,30,john@company.com,IT
+2,Mary,15,mary@company.com,HR
+3,,40,abc.com,Finance
+4,David,70,david@company.com,Sales
+5,Alice,35,alice@company.com,
